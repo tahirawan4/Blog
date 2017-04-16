@@ -1,7 +1,10 @@
 # Blog
 
 How to install
-clone project : git clone https://github.com/tahirawan4/Blog.git
+
+clone project : 
+
+* git clone https://github.com/tahirawan4/Blog.git
 
 After you have done with clone the repo.
 
@@ -21,3 +24,7 @@ After Done with Installation, start your project
 
 
 * python manage.py runserver
+
+You can create an admin user
+
+* python manage.py createsuperuser
