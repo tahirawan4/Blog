@@ -22,7 +22,10 @@
                                 <img style="width: 100%;display: block;" src="{% static "go.gif" %}">
                             </div>
                             <div class="col-md-11 col-sm-11 col-xs-11">
-                                <span>{{ post.blog.author }} in {{ post.blog.title }}</span><br>
+                                {% if not blog %}
+                                    <span>{{ post.blog.author }} in {{ post.blog.title }}</span><br>
+                                {% endif %}
+
                                 <span>{{ post.posted_at }}</span>
                             </div>
                         </div>

@@ -2,13 +2,13 @@ from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 
 # from users.models import Task
-from blogs.models import Post, Category
+from blogs.models import Post, Category, Blog
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ('first_name', 'username', 'last_name', 'email', 'password')
+        fields = ('username', 'first_name', 'last_name', 'email', 'password')
 
     def create(self, validated_data):
         password = validated_data.pop('password')
@@ -16,6 +16,14 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         user.set_password(password)
         user.save()
         return user
+
+
+class BlogSerializer(serializers.ModelSerializer):
+    author = UserSerializer()
+
+    class Meta:
+        model = Blog
+        exclude = ['title', 'author']
 
 
 class PostSerializer(serializers.ModelSerializer):

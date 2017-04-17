@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
+from blogs.blog_views import BlogListView, BlogPostListView
 from blogs.views import UserRegisterView, UserLoginView, AddPostView, PostListView, PostDetails, UpdateDeletePost, \
     LogOutView
 
@@ -29,5 +30,7 @@ urlpatterns = [
 
     url(r'^post/(?P<slug>[^/]+)/details$', PostDetails.as_view(), name='post-details'),
     url(r'^logout/$', LogOutView.as_view(), name='logout'),
+    url(r'^blog/$', BlogListView.as_view(), name='blog-list'),
+    url(r'^blog/(?P<username>[^/]+)/posts$', BlogPostListView.as_view(), name='blog-post-details'),
     # url(r'^login/$', UserLoginView.as_view(), name='login'),
 ]
