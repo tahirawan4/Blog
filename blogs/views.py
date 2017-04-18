@@ -131,6 +131,8 @@ class PostListView(APIView):
         if cat_slug:
             posts = posts.filter(category__slug=cat_slug)
         if sort:
+            if sort == 'posted_at':
+                sort = "-" + sort
             posts = posts.order_by(sort)
         return Response({'posts': posts, 'user': auth, 'categories': categories, 'selected_cat': cat_slug,
                          'logged_in_user': request.user})
