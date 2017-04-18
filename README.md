@@ -17,13 +17,15 @@ In your virtual environment you need to  install all the dependencies
 Go to the project directory `Blog`
 
 
-* pip install requirements.txt
+* pip3 install requirements.txt
 
 
 After Done with Installation, start your project
 
 
 * python manage.py runserver
+
+if your default python is not 3, Please replace `python` with `python3` or `python3.6` 
 
 You can create an admin user
 
