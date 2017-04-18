@@ -82,7 +82,7 @@ class UserLoginView(APIView):
             if status:
                 return redirect('post_list')
         auth = request.user.is_authenticated()
-        messages.error(request, 'Please Double Check your Username and Password.')
+        messages.error(request._request, 'Please Double Check your Username and Password.')
         return Response({'serializer': serializer, 'user': auth})
 
         # return Response(content)
@@ -150,8 +150,9 @@ class AddPostView(APIView):
         return Response({'serializer': post, 'category': cats, 'logged_in_user': request.user})
 
     def post(self, request, format=None):
-        post = PostSerializer(data=request.POST, context={'user_id': request.user.id, 'request': request,
-                                                          'category': request.POST.getlist('category')})
+        post = PostSerializer(data=request.data, files=request.FILES,
+                              context={'user_id': request.user.id, 'request': request,
+                                       'category': request.POST.getlist('category')})
         if post.is_valid():
             post.save()
         return Response({'serializer': post, 'logged_in_user': request.user})
