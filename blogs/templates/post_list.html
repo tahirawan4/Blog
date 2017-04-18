@@ -22,18 +22,19 @@
                                 <img style="width: 100%;display: block;" src="{% static "go.gif" %}">
                             </div>
                             <div class="col-md-11 col-sm-11 col-xs-11">
-                                {% if not blog %}
-                                    <span>{{ post.blog.author }} in {{ post.blog.title }}</span><br>
-                                {% endif %}
 
-                                <span>{{ post.posted_at }}</span>
+                                <span style="color: #2b542c"><b>{{ post.blog.author }}</b></span> in <span
+                                    style="color: #2b542c"><b>{{ post.blog.title }}</b></span><br>
+
+                                <span>{{ post.posted_at }} </span>
                             </div>
                         </div>
                         <br>
-                        <span>{{ post.title }}</span>
+                        <span style="font-size: 18px;"><b>{{ post.title }}</b></span>
                         <br>
                         <span>{{ post.summary }}
                         </span><br>
+                        <br>
                         <a href="{% url 'post-details' slug=post.slug %}">Read more</a>
 
                     </div>

@@ -2,16 +2,6 @@
 {% load rest_framework %}
 {% load static %}
 {% block content %}
-{#    {% block categories %}#}
-{#        {% for category in categories %}#}
-{#            <div class="col-lg-1 {% if selected_cat == category.slug %}bg-success text-white{% endif %}">#}
-{#                <a href="{% url 'blog-post-details' username=logged_in_user.username %}?cat={{ category.slug }}">#}
-{#                </a>#}
-{##}
-{#            </div>#}
-{#        {% endfor %}#}
-{#    {% endblock %}#}
-
     <div class="col-md-8" style="padding-right: 0; padding-left: 0;">
         {% for blog in blogs %}
             <a href="{% url 'blog-post-details' username=blog.author.username %}">

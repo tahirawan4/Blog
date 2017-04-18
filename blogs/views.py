@@ -126,7 +126,7 @@ class PostListView(APIView):
         cat_slug = request.GET.get('cat', None)
         sort = request.GET.get('sort', None)
         auth = request.user.is_authenticated()
-        posts = Post.objects.filter(is_published=True)
+        posts = Post.objects.filter(is_published=True).order_by('-posted_at')
         if cat_slug:
             posts = posts.filter(category__slug=cat_slug)
         if sort:

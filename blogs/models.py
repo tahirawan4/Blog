@@ -40,7 +40,7 @@ class Post(models.Model):
     picture = models.FileField(null=True, blank=True)
     is_published = models.BooleanField(default=True)
     summary = models.TextField()
-    posted_at = models.DateField(auto_now_add=True)
+    posted_at = models.DateTimeField(auto_now_add=True)
     hidden = models.BooleanField(default=False)
     blog = models.ForeignKey(Blog, related_name='post')
     category = models.ManyToManyField(Category)
