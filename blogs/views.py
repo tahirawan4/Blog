@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.http import Http404
 from django.shortcuts import redirect
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -139,9 +140,14 @@ class AddPostView(APIView):
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'add_post.html'
     serializer_class = PostSerializer
+    parser_classes = (MultiPartParser, FormParser,)
 
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
+
+    def dispatch(self, request, *args, **kwargs):
+        p = request.POST  # Force evaluation of the Django request
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, format=None):
         post = PostSerializer()
@@ -150,7 +156,7 @@ class AddPostView(APIView):
         return Response({'serializer': post, 'category': cats, 'logged_in_user': request.user})
 
     def post(self, request, format=None):
-        post = PostSerializer(data=request.data, files=request.FILES,
+        post = PostSerializer(data=request.data,
                               context={'user_id': request.user.id, 'request': request,
                                        'category': request.POST.getlist('category')})
         if post.is_valid():
@@ -200,7 +206,9 @@ class PostDetails(APIView):
         auth = request.user.is_authenticated()
         post = PostSerializer(self.get_object(slug), many=False,
                               context={'request': request, 'user_id': request.user.id}).data
-        return Response({'post': post, 'user': auth, 'categories': categories, 'logged_in_user': request.user})
+        related_categories = self.get_object(slug).category.all()
+        return Response({'post': post, 'user': auth, 'categories': categories, 'logged_in_user': request.user,
+                         'related_cat': related_categories})
 
 
 class UpdateDeletePost(APIView):

@@ -19,18 +19,20 @@ from django.contrib import admin
 from blogs.blog_views import BlogListView, BlogPostListView
 from blogs.views import UserRegisterView, UserLoginView, AddPostView, PostListView, PostDetails, UpdateDeletePost, \
     LogOutView
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^register_user/$', UserRegisterView.as_view(), name='register-user'),
-    url(r'^login/$', UserLoginView.as_view(), name='login'),
-    url(r'^add_post/$', AddPostView.as_view(), name='add_post'),
-    url(r'^$', PostListView.as_view(), name='post_list'),
-    url(r'^update/(?P<slug>[^/]+)/post/$', UpdateDeletePost.as_view(), name='update-post'),
+                  url(r'^admin/', admin.site.urls),
+                  url(r'^register_user/$', UserRegisterView.as_view(), name='register-user'),
+                  url(r'^login/$', UserLoginView.as_view(), name='login'),
+                  url(r'^add_post/$', AddPostView.as_view(), name='add_post'),
+                  url(r'^$', PostListView.as_view(), name='post_list'),
+                  url(r'^update/(?P<slug>[^/]+)/post/$', UpdateDeletePost.as_view(), name='update-post'),
 
-    url(r'^post/(?P<slug>[^/]+)/details$', PostDetails.as_view(), name='post-details'),
-    url(r'^logout/$', LogOutView.as_view(), name='logout'),
-    url(r'^blog/$', BlogListView.as_view(), name='blog-list'),
-    url(r'^blog/(?P<username>[^/]+)/posts$', BlogPostListView.as_view(), name='blog-post-details'),
-    # url(r'^login/$', UserLoginView.as_view(), name='login'),
-]
+                  url(r'^post/(?P<slug>[^/]+)/details$', PostDetails.as_view(), name='post-details'),
+                  url(r'^logout/$', LogOutView.as_view(), name='logout'),
+                  url(r'^blog/$', BlogListView.as_view(), name='blog-list'),
+                  url(r'^blog/(?P<username>[^/]+)/posts$', BlogPostListView.as_view(), name='blog-post-details'),
+                  # url(r'^login/$', UserLoginView.as_view(), name='login'),
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

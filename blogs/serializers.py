@@ -27,9 +27,10 @@ class BlogSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
+
+
     class Meta:
         model = Post
-        # fields = '__all__'
         exclude = ['slug', 'category', 'blog']
 
     def create_blog_if_not_exist(self, user):

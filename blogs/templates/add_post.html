@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-md-3"></div>
         <div class="col-md-6">
-            <form class="form-horizontal" action="{% url 'add_post' %}" method="post" novalidate>
+            <form class="form-horizontal" action="{% url 'add_post' %}" method="post" novalidate enctype="multipart/form-data">
                 {% csrf_token %}
                 {% render_form serializer %}
                 <div class="form-group">

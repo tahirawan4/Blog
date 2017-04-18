@@ -7,16 +7,20 @@
             <h1>{{ post.title }}</h1>
         </div>
         <div class="col-lg-12">
-            <h3>Introduction Text</h3>
+            <h3>{{ post.summary }}</h3>
         </div>
         <div class="col-lg-12">
-            <span>Tags: Category1, Category2 ....<br>
+            <span>Tags: {% for cat in related_cat %}
+                {{ cat.title }} &nbsp;&nbsp;
+                {% endfor %}
+                <br>
         <br></span>
         </div>
     </div>
     <div class="row">
         <div class="col-lg-12">
-            <img style="width: 30%;;display: block;margin: 0 auto;" src="{% static "go.gif" %}">
+            <img style="width: 30%;;display: block;margin: 0 auto;"
+                 src="{% if post.picture %} {{ post.picture }} {% else %}{% static "go.gif" %}{% endif %}">
         </div>
 
 
@@ -26,16 +30,6 @@
         <div class="col-lg-12">
             <br>
             {{ post.body }}
-            {{ post.summary }}
-            Lorem ipsum dolor sit amet, proin nunc sit, ultrices egestas massa sociis phasellus, venenatis et purus
-            donec elit sed odio, nullam ullamcorper, urna vitae egestas orci nec at sodales. Eros sapien donec mollis.
-            Felis ipsum auctor felis, lorem id. Lorem ultrices in, aliquam wisi, mi a orci elit imperdiet sed, placerat
-            aliquam et pharetra non, donec convallis wisi mollis pulvinar tincidunt nulla. Lacus ligula sociosqu morbi
-            etiam sed justo. Congue pretium nulla, ante aliquet mattis volutpat donec, at metus convallis primis cum
-            congue vitae, purus dignissim. Aliquam venenatis quis nibh velit hendrerit, sit condimentum, ante consequat
-            sed ligula. Eget ante felis, mauris purus ullamcorper condimentum. Scelerisque integer ante. Turpis massa
-            sapien blandit porttitor, erat tincidunt sociis, lectus tempus malesuada, lorem mauris quis netus. Blandit
-            amet aliquam blandit amet est, sed neque.web
 
         </div>
     </div>
