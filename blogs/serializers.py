@@ -92,10 +92,15 @@ class LoginSerializer(serializers.Serializer):
     )
     remember_me = serializers.BooleanField()
 
-    #
 
-# class GroupSerializer(serializers.HyperlinkedModelSerializer):
-#     class Meta:
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        exclude = ['hidden']
+
+        #  # class GroupSerializer(serializers.HyperlinkedModelSerializer):
+
+# class Meta:
 #         model = Group
 #         fields = ('url', 'name')
 #

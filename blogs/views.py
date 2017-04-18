@@ -82,7 +82,7 @@ class UserLoginView(APIView):
             if status:
                 return redirect('post_list')
         auth = request.user.is_authenticated()
-        messages.error(request,'Please Double Check your Username and Password.')
+        messages.error(request, 'Please Double Check your Username and Password.')
         return Response({'serializer': serializer, 'user': auth})
 
         # return Response(content)
@@ -199,7 +199,7 @@ class PostDetails(APIView):
         auth = request.user.is_authenticated()
         post = PostSerializer(self.get_object(slug), many=False,
                               context={'request': request, 'user_id': request.user.id}).data
-        return Response({'post': post, 'user': auth, 'categories': categories})
+        return Response({'post': post, 'user': auth, 'categories': categories, 'logged_in_user': request.user})
 
 
 class UpdateDeletePost(APIView):
@@ -220,7 +220,8 @@ class UpdateDeletePost(APIView):
         cats = Category.objects.all()
         post_data = self.get_object(slug)
         post = PostSerializer(post_data, many=False, context={'request': request})
-        return Response({'serializer': post, 'category': cats, slug: slug, 'post': post_data})
+        return Response(
+            {'serializer': post, 'category': cats, slug: slug, 'post': post_data, 'logged_in_user': request.user})
 
     def post(self, request, slug, format=None):
         if request.POST.get('delete'):
@@ -235,7 +236,8 @@ class UpdateDeletePost(APIView):
                                            'category': request.POST.getlist('category')})
             if post.is_valid():
                 post.save()
-            return Response({'serializer': post, 'category': cats, slug: slug, 'post': post_data})
+            return Response(
+                {'serializer': post, 'category': cats, slug: slug, 'post': post_data, 'logged_in_user': request.user})
 
     def delete_post(self, slug):
         post = self.get_object(slug)
