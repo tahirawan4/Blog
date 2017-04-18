@@ -32,13 +32,24 @@ class PostSerializer(serializers.ModelSerializer):
         # fields = '__all__'
         exclude = ['slug', 'category', 'blog']
 
+    def create_blog_if_not_exist(self, user):
+        blog_title = user.first_name + "_" + "Blog"
+        return Blog.objects.create(title=blog_title, author=user)
+
+    def get_user_blog(self, user):
+        try:
+            blog = Blog.objects.get(author=user)
+        except Blog.DoesNotExist:
+            return self.create_blog_if_not_exist(user)
+        return blog
+
     def create(self, validated_data):
         user_id = self.context.get("user_id")
         category_ids = self.context.get("category")
         categories = Category.objects.filter(id__in=category_ids)
         user = User.objects.get(id=user_id)
         post = Post(**validated_data)
-        post.blog = user.blog
+        post.blog = self.get_user_blog(user)
         post.save()
         for cat in categories:
             post.category.add(cat)

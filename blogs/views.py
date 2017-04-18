@@ -10,11 +10,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.renderers import TemplateHTMLRenderer
-
+from django.contrib import messages
 # from users.models import Task
 # from users.serializers import UserSerializer, GroupSerializer, TaskSerializer
 from blogs import utils
-from blogs.models import Post, Category
+from blogs.models import Post, Category, Blog
 from blogs.serializers import UserSerializer, LoginSerializer, PostSerializer
 
 
@@ -48,10 +48,22 @@ class UserLoginView(APIView):
     # authentication_classes = (SessionAuthentication, BasicAuthentication)
     # permission_classes = (IsAuthenticated,)
 
+    def create_blog_if_not_exist(self, user):
+        blog_title = user.first_name + "_" + "Blog"
+        return Blog.objects.create(title=blog_title, author=user)
+
+    def get_user_blog(self, user):
+        try:
+            blog = Blog.objects.get(author=user)
+        except Blog.DoesNotExist:
+            return self.create_blog_if_not_exist(user)
+        return blog
+
     def auth_user(self, request, username, password):
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
+            self.get_user_blog(user)
             return True
 
         else:
@@ -70,6 +82,7 @@ class UserLoginView(APIView):
             if status:
                 return redirect('post_list')
         auth = request.user.is_authenticated()
+        messages.error(request,'Please Double Check your Username and Password.')
         return Response({'serializer': serializer, 'user': auth})
 
         # return Response(content)
@@ -134,14 +147,14 @@ class AddPostView(APIView):
         post = PostSerializer()
         cats = Category.objects.all()
 
-        return Response({'serializer': post, 'category': cats})
+        return Response({'serializer': post, 'category': cats, 'logged_in_user': request.user})
 
     def post(self, request, format=None):
         post = PostSerializer(data=request.POST, context={'user_id': request.user.id, 'request': request,
                                                           'category': request.POST.getlist('category')})
         if post.is_valid():
             post.save()
-        return Response({'serializer': post})
+        return Response({'serializer': post, 'logged_in_user': request.user})
 
 
 class AddUpdateView(APIView):
