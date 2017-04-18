@@ -15,47 +15,49 @@
 
 </head>
 <body>
+<br>
+<br>
 <div class="container">
-    <div class="jumbotron">
-        <h1><a class="navbar-brand" href="{% url 'post_list' %}">My Blog</a></h1>
-    </div>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="{% url 'blog-list' %}">Blog</a>
+                <a class="navbar-brand" href="{% url 'post_list' %}"><span class="glyphicon glyphicon-chevron-right"></span>WORDPLEASE</a>
             </div>
-            <ul class="nav navbar-nav">
-                <li>
+            <ul class="nav navbar-nav navbar-right">
+                {#                <li>#}
+                <li><a href="{% url 'blog-list' %}">Blogs</a></li>
+                {% if user %}
+                    <li>
+                        <a href="{% url 'add_post' %}">New Post</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'logout' %}">Logout</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'blog-post-details' username=logged_in_user.username %}">{{ logged_in_user.username }}
+                            in {{ logged_in_user.blog.title }}</a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{% url 'login' %}">Login</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'register-user' %}">Signup</a>
+                    </li>
+                {% endif %}
 
-                    {% if user %}
-                        <li>
-                            <a href="{% url 'blog-post-details' username=logged_in_user.username %}">{{ logged_in_user.username }}
-                                in {{ logged_in_user.blog.title }}</a>
-                        </li>
-                        <li>
-                            <a href="{% url 'add_post' %}">New Post</a>
-                        </li>
-                        <li>
-                            <a href="{% url 'logout' %}">Logout</a>
-                        </li>
-                    {% else %}
-                        <li>
-                            <a href="{% url 'login' %}">Login</a>
-                        </li>
-                        <li>
-                            <a href="{% url 'register-user' %}">Signup</a>
-                        </li>
-                    {% endif %}
-
-                </li>
+                {#                </li>#}
             </ul>
         </div>
     </nav>
+
     {% if categories %}
+
         <div class="panel panel-default">
 
             <div class="panel-body">
                 {% block categories %}
+                    <div class="col-lg-2">Categories :</div>
                     {% for category in categories %}
                         <div class="col-lg-1 {% if selected_cat == category.slug %}bg-success text-white{% endif %}"><a
                                 href="{% url 'post_list' %}?cat={{ category.slug }}">{{ category.title }}</a></div>
