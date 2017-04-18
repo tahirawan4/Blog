@@ -37,7 +37,7 @@ class Post(models.Model):
     title = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100, unique=True)
     body = models.TextField()
-    picture = models.FileField(null=True, blank=True)
+    picture = models.ImageField(null=True, blank=True)
     is_published = models.BooleanField(default=True)
     summary = models.TextField()
     posted_at = models.DateTimeField(auto_now_add=True)
