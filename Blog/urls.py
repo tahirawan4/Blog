@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
+from blogs import end_point_views
 from blogs.blog_views import BlogListView, BlogPostListView
 from blogs.views import UserRegisterView, UserLoginView, AddPostView, PostListView, PostDetails, UpdateDeletePost, \
     LogOutView
@@ -35,4 +36,15 @@ urlpatterns = [
                   url(r'^blog/$', BlogListView.as_view(), name='blog-list'),
                   url(r'^blog/(?P<username>[^/]+)/posts$', BlogPostListView.as_view(), name='blog-post-details'),
                   # url(r'^login/$', UserLoginView.as_view(), name='login'),
+
+
+                  url(r'^end_point/post_list/$', end_point_views.PostListView.as_view(), name='end-post-list'),
+                  url(r'^end_point/add_post/$', end_point_views.AddPostView.as_view(), name='end-add_post'),
+                  url(r'^end_point/blogs/$', end_point_views.BlogListView.as_view(), name='end-blog-list'),
+                  url(r'^end_point/blog/(?P<username>[^/]+)/posts$', end_point_views.BlogPostListView.as_view(),
+                      name='end-blog-post-details'),
+                  url(r'^end_point/register_user/$', end_point_views.UserRegisterView.as_view(), name='end-register-user'),
+                  url(r'^end_point/login/$', end_point_views.UserLoginView.as_view(), name='end-login'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
