@@ -36,7 +36,9 @@ class UserRegisterView(APIView):
         if serializer.is_valid():
             serializer.save()
             return redirect('login')
-        return Response(serializer.errors)
+        messages.error(request._request, 'Please Double Check your Username')
+        return redirect('register-user')
+        # return Response({'serializer': serializer.errors, 'user': False})
 
         # return Response(content)
 
@@ -49,22 +51,10 @@ class UserLoginView(APIView):
     # authentication_classes = (SessionAuthentication, BasicAuthentication)
     # permission_classes = (IsAuthenticated,)
 
-    def create_blog_if_not_exist(self, user):
-        blog_title = user.first_name + "_" + "Blog"
-        return Blog.objects.create(title=blog_title, author=user)
-
-    def get_user_blog(self, user):
-        try:
-            blog = Blog.objects.get(author=user)
-        except Blog.DoesNotExist:
-            return self.create_blog_if_not_exist(user)
-        return blog
-
     def auth_user(self, request, username, password):
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
-            self.get_user_blog(user)
             return True
 
         else:

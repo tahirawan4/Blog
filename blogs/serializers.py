@@ -10,11 +10,30 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'password')
 
+    def create_blog_if_not_exist(self, user):
+        blog_title = user.username + "_" + "Blog"
+        return Blog.objects.create(title=blog_title, author=user)
+
+    def get_user_blog(self, user):
+
+        blog = Blog.objects.filter(author=user)
+        if not blog:
+            return self.create_blog_if_not_exist(user)
+
+    def validate(self, data):
+        username = data.get('username')
+        try:
+            User.objects.get(username=username)
+        except User.DoesNotExist as ex:
+            return data
+        raise serializers.ValidationError("finish must occur after start")
+
     def create(self, validated_data):
         password = validated_data.pop('password')
         user = User(**validated_data)
         user.set_password(password)
         user.save()
+        self.get_user_blog(user)
         return user
 
 
@@ -29,7 +48,7 @@ class BlogSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        exclude = ['category', 'blog']
+        exclude = ['category', 'blog', 'slug']
 
     def create_blog_if_not_exist(self, user):
         blog_title = user.first_name + "_" + "Blog"
