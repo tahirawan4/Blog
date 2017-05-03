@@ -58,10 +58,7 @@ class UserLoginView(APIView):
 
 
 class UserProfileView(APIView):
-    renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'registration.html'
     serializer_class = UserSerializer
-
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
 

@@ -41,10 +41,13 @@ urlpatterns = [
                   url(r'^end_point/post_list/$', end_point_views.PostListView.as_view(), name='end-post-list'),
                   url(r'^end_point/add_post/$', end_point_views.AddPostView.as_view(), name='end-add_post'),
                   url(r'^end_point/blogs/$', end_point_views.BlogListView.as_view(), name='end-blog-list'),
+                  url(r'^end_point/update/(?P<slug>[^/]+)/post/$', end_point_views.UpdateDeletePost.as_view(),
+                      name='end-update-post'),
                   url(r'^end_point/blog/(?P<username>[^/]+)/posts$', end_point_views.BlogPostListView.as_view(),
                       name='end-blog-post-details'),
-                  url(r'^end_point/register_user/$', end_point_views.UserRegisterView.as_view(), name='end-register-user'),
+                  url(r'^end_point/register_user/$', end_point_views.UserRegisterView.as_view(),
+                      name='end-register-user'),
+                  url(r'^end_point/update_delete/$', end_point_views.UserProfileView.as_view(),
+                      name='end-update-delete-user'),
                   url(r'^end_point/login/$', end_point_views.UserLoginView.as_view(), name='end-login'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
