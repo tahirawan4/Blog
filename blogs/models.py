@@ -18,6 +18,9 @@ class Blog(models.Model):
     def __unicode__(self):
         return '%s' % self.title
 
+    def __str__(self):
+        return '%s' % self.title
+
 
 class Category(models.Model):
     title = models.CharField(max_length=100)
@@ -30,6 +33,9 @@ class Category(models.Model):
         super(Category, self).save(*args, **kwargs)
 
     def __unicode__(self):
+        return '%s' % self.title
+
+    def __str__(self):
         return '%s' % self.title
 
 
@@ -51,4 +57,7 @@ class Post(models.Model):
         super(Post, self).save(*args, **kwargs)
 
     def __unicode__(self):
+        return '%s' % self.title
+
+    def __str__(self):
         return '%s' % self.title

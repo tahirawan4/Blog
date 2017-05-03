@@ -34,7 +34,7 @@ class BlogPostListView(APIView):
         cat_slug = request.GET.get('cat', None)
         sort = request.GET.get('sort', None)
         auth = request.user.is_authenticated()
-        posts = Post.objects.filter(is_published=True, blog__author__username=username)
+        posts = Post.objects.filter(blog__author__username=username)
         if cat_slug:
             posts = posts.filter(category__slug=cat_slug)
         if sort:

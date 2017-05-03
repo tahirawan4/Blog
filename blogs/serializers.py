@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 
@@ -6,9 +7,16 @@ from blogs.models import Post, Category, Blog
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
+    password = serializers.CharField(style={'input_type': 'password'})
+
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'password')
+        extra_kwargs = {
+            'password': {
+                'write_only': True,
+            }
+        }
 
     def create_blog_if_not_exist(self, user):
         blog_title = user.username + "_" + "Blog"

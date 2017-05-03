@@ -21,7 +21,8 @@
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="{% url 'post_list' %}"><span class="glyphicon glyphicon-chevron-right"></span>WORDPLEASE</a>
+                <a class="navbar-brand" href="{% url 'post_list' %}"><span
+                        class="glyphicon glyphicon-chevron-right"></span>WORDPLEASE</a>
             </div>
             <ul class="nav navbar-nav navbar-right">
                 {#                <li>#}
@@ -35,7 +36,7 @@
                     </li>
                     <li>
                         <a href="{% url 'blog-post-details' username=logged_in_user.username %}">{{ logged_in_user.username }}
-                            in {{ logged_in_user.blog.title }}</a>
+                        </a>
                     </li>
                 {% else %}
                     <li>
