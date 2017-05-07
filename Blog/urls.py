@@ -37,7 +37,7 @@ urlpatterns = [
                   url(r'^blog/(?P<username>[^/]+)/posts$', BlogPostListView.as_view(), name='blog-post-details'),
                   # url(r'^login/$', UserLoginView.as_view(), name='login'),
 
-
+                    url(r'^end_point/post/(?P<slug>[^/]+)/details$', end_point_views.PostDetails.as_view(), name='end-post-details'),
                   url(r'^end_point/post_list/$', end_point_views.PostListView.as_view(), name='end-post-list'),
                   url(r'^end_point/add_post/$', end_point_views.AddPostView.as_view(), name='end-add_post'),
                   url(r'^end_point/blogs/$', end_point_views.BlogListView.as_view(), name='end-blog-list'),
