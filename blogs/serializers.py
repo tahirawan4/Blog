@@ -44,6 +44,15 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         self.get_user_blog(user)
         return user
 
+    def update(self, instance, validated_data):
+
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.email = validated_data.get('email', instance.email)
+        self.set_password(validated_data.get('password', instance.password))
+        instance.save()
+        return instance
+
 
 class BlogSerializer(serializers.ModelSerializer):
     author = UserSerializer()

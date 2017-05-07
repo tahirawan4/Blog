@@ -64,10 +64,10 @@ class UserProfileView(APIView):
 
     def get(self, request, format=None):
         users = UserSerializer(request.user)
-        return Response({'serializer': users})
+        return Response({'serializer': users.data})
 
     def put(self, request, format=None):
-        serializer = UserSerializer(data=request.POST)
+        serializer = UserSerializer(request.user, data=request.POST)
         if serializer.is_valid():
             serializer.save()
             return redirect('login')
