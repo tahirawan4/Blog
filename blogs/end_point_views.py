@@ -125,14 +125,16 @@ class PostDetails(APIView):
     serializer_class = PostSerializer
     authentication_classes = (SessionAuthentication, BasicAuthentication)
 
-    def get_object(self, slug):
+    def get_object(self, slug, request):
         try:
-            return Post.objects.get(slug=slug)
+            post = Post.objects.get(slug=slug)
+            if not post.is_published and not post.blog.author == request.user:
+                raise Http404
         except Post.DoesNotExist:
             raise Http404
 
     def get(self, request, slug):
-        post = PostSerializer(self.get_object(slug), many=False,
+        post = PostSerializer(self.get_object(slug), request, many=False,
                               context={'request': request, 'user_id': request.user.id}).data
         return Response(post)
 
@@ -150,11 +152,15 @@ class UpdateDeletePost(APIView):
 
     def get(self, request, slug, format=None):
         post_data = self.get_object(slug)
+        if post_data.blog.author != request.user:
+            return Http404
         post = PostSerializer(post_data, many=False, context={'request': request})
         return Response(post.data)
 
     def post(self, request, slug, format=None):
         post_data = self.get_object(slug)
+        if post_data.blog.author != request.user:
+            return Http404
         post = PostSerializer(post_data, data=request.POST,
                               context={'user_id': request.user.id, 'request': request,
                                        'category': request.POST.getlist('category')})
@@ -162,8 +168,10 @@ class UpdateDeletePost(APIView):
             post.save()
         return Response(post.data)
 
-    def delete_post(self, slug):
+    def delete_post(self, request, slug):
         post = self.get_object(slug)
+        if post.blog.author != request.user:
+            return Http404
         post.delete()
 
 
