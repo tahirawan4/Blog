@@ -128,7 +128,7 @@ class PostDetails(APIView):
     def get_object(self, slug, request):
         try:
             post = Post.objects.get(slug=slug)
-            if not post.is_published and not post.blog.author == request.user:
+            if not post.is_published and not post.blog.author != request.user:
                 raise Http404
         except Post.DoesNotExist:
             raise Http404
