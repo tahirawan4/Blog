@@ -37,7 +37,8 @@ urlpatterns = [
                   url(r'^blog/(?P<username>[^/]+)/posts$', BlogPostListView.as_view(), name='blog-post-details'),
                   # url(r'^login/$', UserLoginView.as_view(), name='login'),
 
-                    url(r'^end_point/post/(?P<slug>[^/]+)/details$', end_point_views.PostDetails.as_view(), name='end-post-details'),
+                  url(r'^end_point/post/(?P<slug>[^/]+)/details$', end_point_views.PostDetails.as_view(),
+                      name='end-post-details'),
                   url(r'^end_point/post_list/$', end_point_views.PostListView.as_view(), name='end-post-list'),
                   url(r'^end_point/add_post/$', end_point_views.AddPostView.as_view(), name='end-add_post'),
                   url(r'^end_point/blogs/$', end_point_views.BlogListView.as_view(), name='end-blog-list'),
@@ -50,4 +51,6 @@ urlpatterns = [
                   url(r'^end_point/update_delete/$', end_point_views.UserProfileView.as_view(),
                       name='end-update-delete-user'),
                   url(r'^end_point/login/$', end_point_views.UserLoginView.as_view(), name='end-login'),
+                  url(r'^end_point/categories/$', end_point_views.CategoriesView.as_view(), name='end-login'),
+                  url(r'^end_point/check_user/(?P<username>[^/]+)$', end_point_views.CheckUserView.as_view(), name='end-login'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

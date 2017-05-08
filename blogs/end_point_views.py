@@ -5,11 +5,11 @@ from django.shortcuts import redirect
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from django.contrib import messages
-from blogs.serializers import UserSerializer, LoginSerializer, PostSerializer
+from blogs.serializers import UserSerializer, LoginSerializer, PostSerializer, CategorySerializer
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.views import APIView
-from blogs.models import Blog, Post
+from blogs.models import Blog, Post, Category
 from blogs.serializers import BlogSerializer, PostSerializer
 from rest_framework.response import Response
 
@@ -134,7 +134,7 @@ class PostDetails(APIView):
             raise Http404
 
     def get(self, request, slug):
-        post = PostSerializer(self.get_object(slug), request, many=False,
+        post = PostSerializer(self.get_object(slug, request), many=False,
                               context={'request': request, 'user_id': request.user.id}).data
         return Response(post)
 
@@ -168,11 +168,12 @@ class UpdateDeletePost(APIView):
             post.save()
         return Response(post.data)
 
-    def delete_post(self, request, slug):
+    def delete(self, request, slug):
         post = self.get_object(slug)
-        if post.blog.author != request.user:
+        if post.blog.author != request.user and not request.user.is_superuser:
             return Http404
         post.delete()
+        return Response("Post Deleted")
 
 
 class LogOutView(APIView):
@@ -209,3 +210,28 @@ class BlogPostListView(APIView):
             posts = posts.order_by(sort)
         posts = PostSerializer(posts, many=True).data
         return Response(posts)
+
+
+class CategoriesView(APIView):
+    serializer_class = CategorySerializer
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+
+    def get(self, request, format=None):
+        categories = Category.objects.filter(hidden=False)
+        cats = CategorySerializer(categories, many=True).data
+        return Response(cats)
+
+
+class CheckUserView(APIView):
+    serializer_class = UserSerializer
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+
+    def get(self, request, username, format=None):
+        if not request.user.is_superuser:
+            return Response("only admin can perform this stuff")
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return Response("User Does not exist")
+        user_serializer = UserSerializer(user).data
+        return Response(user_serializer)
