@@ -4,6 +4,7 @@ from rest_framework import serializers
 
 # from users.models import Task
 from blogs.models import Post, Category, Blog
+from datetime import datetime
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -65,7 +66,7 @@ class BlogSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        exclude = ['category', 'blog', 'slug']
+        exclude = ['category', 'blog', ]
 
     def create_blog_if_not_exist(self, user):
         blog_title = user.first_name + "_" + "Blog"
@@ -108,6 +109,7 @@ class PostSerializer(serializers.ModelSerializer):
         instance.body = validated_data.get('body', instance.body)
         instance.summary = validated_data.get('summary', instance.summary)
         instance.is_published = validated_data.get('is_published', instance.is_published)
+        instance.posted_at = datetime.now()
         for cat in categories:
             instance.category.add(cat)
         instance.save()
