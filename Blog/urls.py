@@ -52,5 +52,10 @@ urlpatterns = [
                       name='end-update-delete-user'),
                   url(r'^end_point/login/$', end_point_views.UserLoginView.as_view(), name='end-login'),
                   url(r'^end_point/categories/$', end_point_views.CategoriesView.as_view(), name='end-login'),
-                  url(r'^end_point/check_user/(?P<username>[^/]+)$', end_point_views.CheckUserView.as_view(), name='end-login'),
+                  url(r'^end_point/check_user/(?P<username>[^/]+)$', end_point_views.CheckUserView.as_view(),
+                      name='end-login'),
+
+                  url(r'^end_point/delete_user/(?P<username>[^/]+)$', end_point_views.DeleteUserView.as_view(),
+                      name='delete-user'),
+
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

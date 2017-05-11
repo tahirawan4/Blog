@@ -128,10 +128,11 @@ class PostDetails(APIView):
     def get_object(self, slug, request):
         try:
             post = Post.objects.get(slug=slug)
-            if not post.is_published and not post.blog.author != request.user:
+            if not post.is_published and post.blog.author != request.user:
                 raise Http404
         except Post.DoesNotExist:
             raise Http404
+        return post
 
     def get(self, request, slug):
         post = PostSerializer(self.get_object(slug, request), many=False,
@@ -161,7 +162,10 @@ class UpdateDeletePost(APIView):
         post_data = self.get_object(slug)
         if post_data.blog.author != request.user:
             return Http404
-        post = PostSerializer(post_data, data=request.POST,
+        data = request.POST
+        setattr(data,'slug',post_data.slug)
+
+        post = PostSerializer(post_data, data=data,
                               context={'user_id': request.user.id, 'request': request,
                                        'category': request.POST.getlist('category')})
         if post.is_valid():
@@ -203,7 +207,9 @@ class BlogPostListView(APIView):
     def get(self, request, username, format=None):
         cat_slug = request.GET.get('cat', None)
         sort = request.GET.get('sort', None)
-        posts = Post.objects.filter(is_published=True, blog__author__username=username)
+        posts = Post.objects.filter(blog__author__username=username)
+        if request.user.username != username:
+            posts = Post.objects.filter(is_published=True, blog__author__username=username)
         if cat_slug:
             posts = posts.filter(category__slug=cat_slug)
         if sort:
@@ -235,3 +241,20 @@ class CheckUserView(APIView):
             return Response("User Does not exist")
         user_serializer = UserSerializer(user).data
         return Response(user_serializer)
+
+
+class DeleteUserView(APIView):
+    serializer_class = UserSerializer
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, username, format=None):
+        if not request.user.is_superuser:
+            return Response("only admin can perform this stuff")
+        try:
+            user = User.objects.filter(username=username)
+            user.delete()
+        except User.DoesNotExist:
+            return Response("User Does not exist")
+
+        return Response("User deleted Successfully")

@@ -66,7 +66,7 @@ class BlogSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        exclude = ['category', 'blog', ]
+        exclude = ['category', 'blog', 'slug']
 
     def create_blog_if_not_exist(self, user):
         blog_title = user.first_name + "_" + "Blog"
