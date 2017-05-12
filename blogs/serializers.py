@@ -82,7 +82,9 @@ class PostSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user_id = self.context.get("user_id")
         category_ids = self.context.get("category")
-        categories = Category.objects.filter(id__in=category_ids)
+        categories = []
+        if category_ids != ['']:
+            categories = Category.objects.filter(id__in=category_ids)
         user = User.objects.get(id=user_id)
         post = Post(**validated_data)
         post.blog = self.get_user_blog(user)

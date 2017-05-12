@@ -5,6 +5,8 @@ from django.shortcuts import redirect
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from django.contrib import messages
+
+from blogs import utils
 from blogs.serializers import UserSerializer, LoginSerializer, PostSerializer, CategorySerializer
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.renderers import TemplateHTMLRenderer
@@ -162,15 +164,11 @@ class UpdateDeletePost(APIView):
         post_data = self.get_object(slug)
         if post_data.blog.author != request.user:
             return Http404
-        data = request.POST
-        setattr(data,'slug',post_data.slug)
+        if not request.POST.getlist('category'):
+            return Response("Please Provide category id")
+        post = utils.update_post(post_data, request.data, request.POST.getlist('category'))
 
-        post = PostSerializer(post_data, data=data,
-                              context={'user_id': request.user.id, 'request': request,
-                                       'category': request.POST.getlist('category')})
-        if post.is_valid():
-            post.save()
-        return Response(post.data)
+        return Response(PostSerializer(post).data)
 
     def delete(self, request, slug):
         post = self.get_object(slug)
