@@ -18,3 +18,12 @@ def update_post(instance, validated_data, category_ids):
     instance.save()
 
     return instance
+
+
+def update_user(instance, validated_data):
+    instance.first_name = validated_data.get('first_name', instance.first_name)
+    instance.last_name = validated_data.get('last_name', instance.last_name)
+    instance.email = validated_data.get('email', instance.email)
+    instance.set_password(validated_data.get('password', instance.password))
+    instance.save()
+    return instance

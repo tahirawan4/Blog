@@ -69,11 +69,8 @@ class UserProfileView(APIView):
         return Response({'serializer': users.data})
 
     def put(self, request, format=None):
-        serializer = UserSerializer(request.user, data=request.POST)
-        if serializer.is_valid():
-            serializer.save()
-            return redirect('login')
-        return Response(serializer.errors)
+        user = utils.update_user(request.user, request.data)
+        return Response(UserSerializer(user).data)
 
     def delete(self, request, format=None):
         user = request.user
@@ -164,9 +161,10 @@ class UpdateDeletePost(APIView):
         post_data = self.get_object(slug)
         if post_data.blog.author != request.user:
             return Http404
+        category_ids = request.POST.getlist('category')
         if not request.POST.getlist('category'):
-            return Response("Please Provide category id")
-        post = utils.update_post(post_data, request.data, request.POST.getlist('category'))
+            category_ids = [0]
+        post = utils.update_post(post_data, request.data, category_ids)
 
         return Response(PostSerializer(post).data)
 
