@@ -34,13 +34,14 @@ class BlogPostListView(APIView):
         cat_slug = request.GET.get('cat', None)
         sort = request.GET.get('sort', None)
         auth = request.user.is_authenticated()
-        if request.user.username == username:
-            posts = Post.objects.filter(blog__author__username=username)
-        else:
-            posts = Post.objects.filter(blog__author__username=username, hidden=False)
+
+        posts = Post.objects.filter(blog__author__username=username)
+        if request.user.username != username:
+            posts = Post.objects.filter(is_published=True, blog__author__username=username)
         if cat_slug:
             posts = posts.filter(category__slug=cat_slug)
         if sort:
             posts = posts.order_by(sort)
+
         return Response({'posts': posts, 'user': auth, 'categories': categories, 'selected_cat': cat_slug,
                          'logged_in_user': request.user, 'blog': True})
