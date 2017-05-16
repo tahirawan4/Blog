@@ -43,5 +43,7 @@ class BlogPostListView(APIView):
         if sort:
             posts = posts.order_by(sort)
 
+        if not auth:
+            posts = posts.filter(is_published=True)
         return Response({'posts': posts, 'user': auth, 'categories': categories, 'selected_cat': cat_slug,
                          'logged_in_user': request.user, 'blog': True})

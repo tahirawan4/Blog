@@ -203,6 +203,7 @@ class BlogPostListView(APIView):
     def get(self, request, username, format=None):
         cat_slug = request.GET.get('cat', None)
         sort = request.GET.get('sort', None)
+        auth = request.user.is_authenticated()
         posts = Post.objects.filter(blog__author__username=username)
         if request.user.username != username:
             posts = Post.objects.filter(is_published=True, blog__author__username=username)
@@ -210,6 +211,8 @@ class BlogPostListView(APIView):
             posts = posts.filter(category__slug=cat_slug)
         if sort:
             posts = posts.order_by(sort)
+        if not auth:
+            posts = posts.filter(is_published=True)
         posts = BlogPostSerializer(posts, many=True).data
         return Response(posts)
 
