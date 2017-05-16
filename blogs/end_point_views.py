@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib import messages
 
 from blogs import utils
-from blogs.serializers import UserSerializer, LoginSerializer, PostSerializer, CategorySerializer
+from blogs.serializers import UserSerializer, LoginSerializer, PostSerializer, CategorySerializer, BlogPostSerializer
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.views import APIView
@@ -197,7 +197,7 @@ class BlogListView(APIView):
 
 
 class BlogPostListView(APIView):
-    serializer_class = PostSerializer
+    serializer_class = BlogPostSerializer
     authentication_classes = (SessionAuthentication, BasicAuthentication)
 
     def get(self, request, username, format=None):
@@ -210,7 +210,7 @@ class BlogPostListView(APIView):
             posts = posts.filter(category__slug=cat_slug)
         if sort:
             posts = posts.order_by(sort)
-        posts = PostSerializer(posts, many=True).data
+        posts = BlogPostSerializer(posts, many=True).data
         return Response(posts)
 
 

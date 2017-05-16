@@ -63,6 +63,12 @@ class BlogSerializer(serializers.ModelSerializer):
         exclude = ['title', 'author']
 
 
+class BlogPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        exclude = ['category', 'blog']
+
+
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
